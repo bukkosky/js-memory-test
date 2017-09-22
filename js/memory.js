@@ -47,7 +47,7 @@ function Card(img, id) {
     this.hidden = false;
 
     this.hide = function () {
-        let $id = $("#"+this.id);
+        let $id = $("#" + this.id);
         this.hidden = true;
 
         $id.toggleClass("hidden");
@@ -61,14 +61,14 @@ function Card(img, id) {
         }
     };
     this.restore = function () {
-        let $id = $("#"+this.id);
+        let $id = $("#" + this.id);
 
         $id.toggleClass("highlight");
         $id.css({"background-image":""});
         this.revealed = false;
     };
     this.revealCard = function () {
-        let $id = $("#"+this.id);
+        let $id = $("#" + this.id);
 
         if(!this.revealed && !lock && !this.hidden) {
 
