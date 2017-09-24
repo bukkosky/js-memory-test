@@ -1,17 +1,62 @@
 let pictures, lock, oneVisible, pairs, turns, imgData, cards;
 let g = new Game();
-g.play();
+g.drawMenu();
 
 function Game() {
 
-    this.play = function () {
+    this.drawMenu = function () {
 
-        pictures = ["ciri.png", "geralt.png", "jaskier.png", "iorweth.png", "triss.png", "yen.png"];
+        let $board = $(".board");
+        let levels = ["Easy", "Medium", "Hard"];
+
+        $board.html("<h2>Choose your difficulty level</h2>");
+
+        for(let i = 0; i < 3; i++) {
+            $board.append("<div class=\"btn-level\">" + levels[i] + "</div>");
+        }
+
+        $(".btn-level").each(function (i) {
+            $(this).on("click", function () {
+                play(i);
+            });
+        });
+    };
+
+    function play(level) {
+
+        let $board = $(".board");
+        let aLength = 0;
+        pictures = [];
         lock = false;
         oneVisible = false;
-
         turns = 0;
         imgData = "";
+        cards = [];
+
+        $board.html("<div class=\"field\"></div>");
+        $field = $(".field");
+
+        switch(level) {
+            // easy - 4x4 - 16 cards
+            case 0:
+                $field.addClass("small");
+                aLength = 8;
+                break;
+            // normal - 6x5 - 30 cards
+            case 1:
+                $field.addClass("medium");
+                aLength = 15;
+                break;
+            // difficult - 6x7 - 42 cards
+            case 2:
+                $field.addClass("big");
+                aLength = 21;
+                break;
+        }
+
+        for(let i = 1; aLength >= i; i++) {
+            pictures.push(i + ".png");
+        }
 
         let upgrArr = function () {
             return $.map(pictures, function (n) {
@@ -20,22 +65,20 @@ function Game() {
                 return 0.5 - Math.random();
             });
         };
+
         let cImg = upgrArr();
+
         pairs = cImg.length;
-        cards = [];
 
-        let $board = $(".board");
-
-        $board.html("");
         $(cImg).each(function (i) {
             cards.push(new Card(cImg[i], "c" + i));
         }).each(function (i) {
-            $board.append("<div class=\"card\" id=\"" + cards[i].id + "\"></div>");
+            $field.append("<div class=\"card\" id=\"" + cards[i].id + "\"></div>");
             $("#" + cards[i].id).on("click", function () {
                 cards[i].revealCard();
             });
         });
-        $board.append("<div class=\"score\">Turn counter: 0</div>");
+        $board.append("<div class=\"score\">Turn: 0</div>");
     }
 }
 
@@ -56,7 +99,7 @@ function Card(img, id) {
         if(pairs === 0) {
             $(".board").html("<h1>You win!<br>Done in " + turns + " turns</h1><a class=\"btn\">Play again</a>");
             $(".btn").on("click", function () {
-                g.play();
+                g.drawMenu();
             });
         }
     };
@@ -96,7 +139,7 @@ function Card(img, id) {
                     }, 1000);
                 }
                 turns++;
-                $(".score").html("Turn counter: " + turns);
+                $(".score").html("Turn: " + turns);
                 oneVisible = false;
             }
         }
