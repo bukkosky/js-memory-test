@@ -1,15 +1,27 @@
-body {
-	margin: 0;
-	background-color: #0b0a15;
-	color: #7c7fc0;
-	font-family: 'Exo 2', sans-serif;
-    font-size: 28px;
+html, body {
+	height: 100%;
 }
 
-.banner a:link    { color: #209781; text-decoration: none; transition: all .3s ease-in-out; }
-.banner a:visited { color: #209781; }
-.banner a:active  { color: #209781; }
-.banner a:hover   { color: #E9B64A; }
+body {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: stretch;
+	justify-content: space-between;
+	background-color: #0b0a15;
+	font-family: 'Exo 2', sans-serif;
+	color: #7c7fc0;
+	margin: 0;
+	padding: 0;
+}
+
+/* Top bar */
+
+header {
+	width: 100%;
+	align-self: flex-start;
+}
 
 .banner {
 	color: #f2f2f2;
@@ -19,20 +31,37 @@ body {
 	background-color: #30286f;
 	width: 100%;
 	border-bottom: 1px solid #101010;
+	align-self: flex-start;
 }
 
-.banner > h1, h2 {
-	font-weight: 400;
-}
+.banner a:link    { color: #209781; text-decoration: none; transition: all .3s ease-in-out; }
+.banner a:visited { color: #209781; }
+.banner a:active  { color: #209781; }
+.banner a:hover   { color: #E9B64A; }
+.banner h1, h2    { font-weight: 400; }
 
 .banner > h1 {
 	padding: 0 0 0 50px;
-	font-size: 30px;
+	font-size: 24px;
 }
 
 .banner > h2 {
 	font-size: 20px;
 	padding: 0 50px 0 0;
+}
+
+/* Main content */
+
+main {
+	width: 100%;
+	align-self: stretch;
+}
+
+article {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 }
 
 .board {
@@ -42,23 +71,67 @@ body {
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
 	text-align: center;
 }
 
-.board > h1 {
-	font-size: 64px;
-	margin: 80px 0 20px 0;
-}
-
-.board > h2 {
+/* Game - menu - choose level */
+.board > .board-header {
+	padding: 0;
 	font-size: 40px;
-	margin: 80px 0 20px 0;
+	margin: 0 0 30px 0;
 }
 
-.field {
-	margin-top: 70px;
+.board > .btn-level {
+	font-size: 24px;
+	border: 2px solid #7c7fc0;
+	background-color: #0b0a15;
+	width: 200px;
+	padding: 20px 0;
+	margin: 10px;
+	cursor: pointer;
+	transition: all .3s ease-in-out;
+}
+
+.board > .btn-level:last-child {
+	margin-bottom: 100px;
+}
+
+.board > .btn-level:hover {
+	border-color: #209781;
+	color: #209781;
+}
+
+/* Gameplay - cards */
+
+.board > .field {
+	animation: fadein .3s;
+	display: inline-flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+
+}
+
+.field > .card {
+	width: 110px;
+	height: 110px;
+	padding: 0;
+	margin: 3px;
+	background: url("../img/card.png") no-repeat;
+	background-size: cover;
+	cursor: pointer;
+	filter: brightness(80%);
+	transition: all .3s ease-in-out;
+}
+
+.field > .card:hover {
+	filter: brightness(100%);
+}
+
+.board > .score {
+	font-size: 30px;
+	margin-top: 5px;
 }
 
 .small {
@@ -72,76 +145,42 @@ body {
 	width: 920px;
 }
 
-.card {
-	width: 110px;
-	height: 110px;
-	display: inline-block;
-	padding: 0;
-	margin: 1px 4px;
-	background: url("../img/card.png") no-repeat;
-	background-size: cover;
-	cursor: pointer;
-	filter: brightness(80%);
-	transition: all .3s ease-in-out;
+/* End of game - score */
+
+.board > .score-header {
+	padding-bottom: 20px;
+	font-size: 50px;
 }
 
-.card:hover {
-	filter: brightness(100%);
+.board > .score-new {
+	color: #E9B64A;
+	font-size: 46px;
 }
 
-.score {
-	margin-top: 5px;
+.board > .score-best {
+	padding-top: 10px;
+	font-size: 32px;
 }
 
 .btn {
-	border-bottom: 4px solid #7c7fc0;
-	padding: 0;
-	margin-top: 36px;
-	margin-left: auto;
-	margin-right: auto;
-	display: inline-block;
-	font-size: 64px;
+	color: #209781;
+	font-size: 50px;
 	transition: all .3s ease-in-out;
 	cursor: pointer;
+	margin: 35px 0 80px 0;
 }
 
 .btn:hover {
-	border-bottom: 4px solid #e9b64a;
-	color: #e9b64a;
+	color: #E9B64A;
+
 }
 
-.btn-level {
-	border: 2px solid #7c7fc0;
-	background-color: #0b0a15;
-	width: 200px;
-	padding: 20px 0;
-	margin: 10px;
-	cursor: pointer;
-	transition: all .3s ease-in-out;
-}
-
-.btn-level:hover {
-	border-color: #209781;
-	color: #209781;
-}
-
-.hidden {
-	cursor: default;
-	opacity: 0;
-}
-
-.highlight {
-	border-color: #e9b64a;
-	cursor: default;
-	filter:brightness(100%);
-}
+/* footer */
 
 footer {
+	align-self: flex-end;
 	display: flex;
 	justify-content: center;
-	position: absolute;
-	left: 0;
-	bottom: 0;
 	width: 100%;
 	background-color: #070707;
 	border-top: 1px solid #020202;
@@ -156,6 +195,30 @@ footer a:link {
 	color: #454545;
 	transition: all .3s ease-in-out
 }
+
 footer a:visited { color: #454545; }
 footer a:active { color: #454545; }
 footer a:hover { color: #9c9b39; }
+
+/* special classes */
+
+.field > .hidden {
+	cursor: default;
+	opacity: 0;
+}
+
+.field > .highlight {
+	border-color: #e9b64a;
+	cursor: default;
+	filter:brightness(100%);
+}
+
+.field > .rotateCard {
+	transform: scaleX(-1) rotateY(180deg);
+	transition: all .3s ease-in-out;
+}
+
+@keyframes fadein {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
