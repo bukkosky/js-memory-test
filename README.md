@@ -8,11 +8,10 @@ Play Demo: [GitHub Page](https://rettles.github.io/js-memory-test/)
 - [easytimer.js](https://github.com/albert-gonzalez/easytimer.js)
 
 ## Informations [PL]
-Projekt ten przedstawia moją wizję udoskonalenia gry zawartej w kursie. Cały projekt napisałem od nowa, od zera inspirując się odcinkiem z kursu kanału Pasja Informatyki (link powyżej). Niżej przedstawiam listę "większych" zmian, które wprowadziłem, wszystkiego nie opiszę np. detale kodu js ponieważ można to sprawdzić.
-
+Projekt ten przedstawia moją wizję udoskonalenia gry zawartej w kursie. Cały projekt napisałem od nowa inspirując się odcinkiem z kursu kanału Pasja Informatyki (link powyżej). Niżej przedstawiam listę "większych", ważniejszych zmian, które wprowadziłem, wszystkiego nie opiszę np. detale kodu js ponieważ jest tego sporo a kod będzie refraktoryzowany, zachęcam do idywidualnego wglądu i analizy.
 
 #### Nowy system punktowy
-Nowy system punktacji ma na celu lepsze oddanie umiejętności gracza ponieważ najlepszy gracz to najszybszy oraz najdokładniejszy, bierze on pod uwagę tak jak wspominałem czas, w którym zosała ukończona gra,z ilość tur oraz ilość kart i przelicza to wszystko na punkty. Dzięki temu wyniki będą bardziej różnorodne.
+Nowy system punktacji ma na celu lepsze oddanie umiejętności gracza ponieważ najlepszy gracz to najszybszy oraz najdokładniejszy, bierze on pod uwagę tak jak wspominałem czas, w którym zosała ukończona gra, ilość tur oraz ilość kart i przelicza to wszystko na punkty. Dzięki temu wyniki będą bardziej różnorodne.
 
 Zasada jest prosta: 
 - Za każdą odkrytą pare otrzymuje się 60pkt
