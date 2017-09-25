@@ -66,7 +66,7 @@ function Game() {
         });
     };
 
-    function play(level) {
+    function play(setLevel) {
 
         let $board = $(".board");
         let aLength = 0;
@@ -80,11 +80,10 @@ function Game() {
         $board.html("<div class=\"field\"></div>");
         let $field = $(".field");
 
-        switch(level) {
+        switch(setLevel) {
             // easy - 4x4 - 16 cards
             case 0:
                 level = "easy";
-                $field.addClass("easy");
                 aLength = 8;
                 break;
             // normal - 6x5 - 30 cards
@@ -181,7 +180,7 @@ function Card(img, id) {
     };
     this.revealCard = function () {
         let $id = $("#" + this.id);
-
+        alert(level);
         if(!timer.isRunning()) {
             timer.start({precision: 'seconds'});
             timer.addEventListener('secondsUpdated', function () {
