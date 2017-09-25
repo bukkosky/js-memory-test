@@ -130,19 +130,28 @@ article {
 }
 
 .board > .score {
-	font-size: 30px;
-	margin-top: 5px;
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
 }
 
-.small {
-	width: 560px;
+.score > .time, .turns {
+	margin: 0;
+	padding: 0;
+	font-size: 24px;
+}
+
+.easy {
+	width: 464px;
 }
 .medium {
-	width: 760px;
+	width: 696px;
 }
 
-.big {
-	width: 920px;
+.hard {
+	width: 812px;
 }
 
 /* End of game - score */

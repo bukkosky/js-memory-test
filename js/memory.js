@@ -1,6 +1,10 @@
-let pictures, lock, oneVisible, pairs, turns, imgData, cards, score, level;
+let pictures, lock, oneVisible, pairs, turns, imgData, cards, score, level, timer, secs, time;
 let g = new Game();
+
+// Draw main menu
 g.drawMenu();
+
+
 
 function Score() {
 
@@ -27,11 +31,22 @@ function Score() {
             this.hard = score;
         }
     };
+    this.getCurrentScore = function (cards, turns, secs) {
+        let result = cards * 35 - ((turns - (cards/2)) * 10) - secs;
+        if(result <= 0) {
+            return 0;
+        }
+        else {
+            return result;
+        }
+    };
+
 }
 
 function Game() {
 
     score = new Score;
+    timer = new Timer();
 
     this.drawMenu = function () {
 
@@ -40,10 +55,10 @@ function Game() {
 
         $board.html("<div class=\"board-header\">Choose your difficulty level</div>");
 
-        for(let i = 0; i < 3; i++) {
+        // Make 3 buttons
+        for(let i = 0; i < levels.length; i++) {
             $board.append("<div class=\"btn-level\">" + levels[i] + "</div>");
         }
-
         $(".btn-level").each(function (i) {
             $(this).on("click", function () {
                 play(i);
@@ -68,23 +83,23 @@ function Game() {
         switch(level) {
             // easy - 4x4 - 16 cards
             case 0:
-                $field.addClass("small");
                 level = "easy";
+                $field.addClass("easy");
                 aLength = 8;
                 break;
             // normal - 6x5 - 30 cards
             case 1:
                 level = "medium";
-                $field.addClass("medium");
                 aLength = 15;
                 break;
             // difficult - 6x7 - 42 cards
             case 2:
                 level = "hard";
-                $field.addClass("big");
                 aLength = 21;
                 break;
         }
+
+        $field.addClass(level);
 
         for(let i = 1; aLength >= i; i++) {
             pictures.push(i + ".png");
@@ -110,7 +125,11 @@ function Game() {
                 cards[i].revealCard();
             });
         });
-        $board.append("<div class=\"score\">Turn: 0</div>");
+        $board.append("<div class=\"score\">" +
+            "<div class=\"time\">Time: 00:00:00</div>" +
+            "<div class=\"turns\">Turn: 0</div>" +
+            "</div>");
+        $(".score").addClass(level);
     }
 }
 
@@ -118,28 +137,33 @@ function Card(img, id) {
 
     this.img = "url(img/" + img + ")";
     this.id = id;
-    this.revealed = false;
-    this.hidden = false;
+
+    // States: revealed, hidden, normal
+    this.state = "normal";
 
     this.hide = function () {
         let $id = $("#" + this.id);
         let $board = $(".board");
-        this.hidden = true;
+
+        this.state = "hidden";
 
         $id.toggleClass("hidden highlight");
         pairs--;
 
+        // increase score
         if(pairs === 0) {
+            timer.stop();
 
+            let points = score.getCurrentScore(cards.length, turns, secs);
             // New best score
-            if(score.getScore(level) === 0 || score.getScore(level) > turns) {
-                score.setScore(level, turns);
-                $board.html("<div class=\"score-header\">Congratulations You Won!</div>" +
-                    "<div class=\"score-new\">New record:<br> " + score.getScore(level) + " turns!</div>");
+            if(score.getScore(level) < points) {
+                score.setScore(level, points);
+                $board.html("<div class=\"score-header\">Congratulations You won!</div>" +
+                    "<div class=\"score-new\">New the best score:<br> " + score.getScore(level) + " points!</div>");
             } else {
-                $board.html("<div class=\"score-header\">Congratulations You Won!</div>" +
-                    "<div class=\"score-new\">Your score: " + turns + "</div>" +
-                    "<div class=\"score-best\">The best score: " + score.getScore(level) + "</div>");
+                $board.html("<div class=\"score-header\">Congratulations You won!</div>" +
+                    "<div class=\"score-new\">Your score: " + points + " points</div>" +
+                    "<div class=\"score-best\">The best score: " + score.getScore(level) + " points</div>");
             }
             $board.append("<a class=\"btn\">Play again</a>");
             $(".btn").on("click", function () {
@@ -150,16 +174,27 @@ function Card(img, id) {
     this.restore = function () {
         let $id = $("#" + this.id);
 
+        this.state = "normal";
+
         $id.toggleClass("highlight rotateCard");
         $id.css({"background-image":""});
-        this.revealed = false;
     };
     this.revealCard = function () {
         let $id = $("#" + this.id);
 
-        if(!this.revealed && !lock && !this.hidden) {
+        if(!timer.isRunning()) {
+            timer.start({precision: 'seconds'});
+            timer.addEventListener('secondsUpdated', function () {
+                secs = timer.getTimeValues().seconds + (timer.getTimeValues().minutes * 60) +
+                    (timer.getTimeValues().hours * 3600) + (timer.getTimeValues().days * 3600 * 24);
+                time = timer.getTimeValues().toString();
+                $(".time").html("Time: " + time);
+            });
+        }
 
-            this.revealed = true;
+        if(!lock && this.state === "normal") {
+
+            this.state = "revealed";
             lock = true;
 
             $id.css({"background-image": this.img});
@@ -171,6 +206,7 @@ function Card(img, id) {
                 imgData = this.img;
                 oneVisible = true;
                 lock = false;
+
             } else {
 
                 if (this.img === imgData) {
@@ -184,7 +220,7 @@ function Card(img, id) {
                     }, 1000);
                 }
                 turns++;
-                $(".score").html("Turn: " + turns);
+                $(".turns").html("Turn: " + turns);
                 oneVisible = false;
             }
         }
@@ -192,7 +228,7 @@ function Card(img, id) {
     function changeCardState(parameter) {
         lock = false;
         $.grep(cards, function (e) {
-            if (e.revealed && !e.hidden) {
+            if (e.state === "revealed") {
                 switch(parameter) {
                     case "hide":
                         e.hide();
