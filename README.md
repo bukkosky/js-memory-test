@@ -33,4 +33,4 @@ Dostępne są 3 poziomy trudności:
 #### Wyniki
 Gra przechowuje najlepsze wyniki, które uzyskamy w trakcie rozrywki co za tym idzie można ustanawiać rekordy. Dla każdego poziomu trudności ustanawia się najlepszy wynik. Reset następuje w wyniku odświeżenia strony.
 #### Tematyka Hotsa
-To jest wynik potrzeby na nowe karty, jako że nie mogłem znaleźć większej ilości podobnych grafik do tych z kursu to uznałem, że najprostszym wyjściem będzie. zmiana tematyki na inną i padło na Hotsa :) Nie chciałem łączyć obu tematyk ponieważ trudniej by było stworzyć klimat na stronie.
+To jest wynik potrzeby na nowe karty, jako że nie mogłem znaleźć większej ilości podobnych grafik do tych z kursu to uznałem, że najprostszym wyjściem będzie zmiana tematyki na inną i padło na Hotsa :) Nie chciałem łączyć obu tematyk ponieważ trudniej by było stworzyć klimat na stronie.
