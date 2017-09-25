@@ -32,7 +32,7 @@ function Score() {
         }
     };
     this.getCurrentScore = function (cards, turns, secs) {
-        let result = cards * 35 - ((turns - (cards/2)) * 10) - secs;
+        let result = cards * 30 - ((turns - (cards/2)) * 10) - secs;
         if(result <= 0) {
             return 0;
         }
@@ -158,11 +158,11 @@ function Card(img, id) {
             if(score.getScore(level) < points) {
                 score.setScore(level, points);
                 $board.html("<div class=\"score-header\">Congratulations You won!</div>" +
-                    "<div class=\"score-new\">New the best score:<br> " + score.getScore(level) + " points!</div>");
+                    "<div class=\"score-new\">New best score:<br> " + score.getScore(level) + " points!</div>");
             } else {
                 $board.html("<div class=\"score-header\">Congratulations You won!</div>" +
                     "<div class=\"score-new\">Your score: " + points + " points</div>" +
-                    "<div class=\"score-best\">The best score: " + score.getScore(level) + " points</div>");
+                    "<div class=\"score-best\">Best: " + score.getScore(level) + " points</div>");
             }
             $board.append("<a class=\"btn\">Play again</a>");
             $(".btn").on("click", function () {
@@ -180,7 +180,7 @@ function Card(img, id) {
     };
     this.revealCard = function () {
         let $id = $("#" + this.id);
-        
+
         if(!timer.isRunning()) {
             timer.start({precision: 'seconds'});
             timer.addEventListener('secondsUpdated', function () {
