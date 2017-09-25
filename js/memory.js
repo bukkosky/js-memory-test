@@ -180,7 +180,7 @@ function Card(img, id) {
     };
     this.revealCard = function () {
         let $id = $("#" + this.id);
-        alert(level);
+        
         if(!timer.isRunning()) {
             timer.start({precision: 'seconds'});
             timer.addEventListener('secondsUpdated', function () {
