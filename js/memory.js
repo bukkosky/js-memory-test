@@ -1,7 +1,9 @@
 let pictures, lock, oneVisible, pairs, turns, imgData, cards, score, level, timer, secs, time;
 
-let imagesToLoad = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png", "9.png", "10.png", "11.png", "12.png",
-    "13.png", "14.png", "15.png", "16.png", "17.png", "18.png","19.png", "20.png","21.png", "card.png"];
+let imagesToLoad = ["./img/1.png", "./img/2.png", "./img/3.png", "./img/4.png", "./img/5.png", "./img/6.png",
+    "./img/7.png", "./img/8.png", "./img/9.png", "./img/10.png", "./img/11.png", "./img/12.png",
+    "./img/13.png", "./img/14.png", "./img/15.png", "./img/16.png", "./img/17.png", "./img/18.png",
+    "./img/19.png", "./img/20.png","./img/21.png", "./img/card.png"];
 
 $.fn.preload = function() {
 
