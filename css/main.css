@@ -75,13 +75,13 @@ article {
 }
 
 /* Game - menu - choose level */
-.board > .board-header {
+.board .board-header {
 	padding: 0;
 	font-size: 40px;
 	margin: 0 0 30px 0;
 }
 
-.board > .btn-level {
+.board .btn-level {
 	font-size: 24px;
 	border: 2px solid #7c7fc0;
 	background-color: #0b0a15;
@@ -92,18 +92,18 @@ article {
 	transition: all .3s ease-in-out;
 }
 
-.board > .btn-level:last-child {
+.board .btn-level:last-child {
 	margin-bottom: 100px;
 }
 
-.board > .btn-level:hover {
+.board .btn-level:hover {
 	border-color: #209781;
 	color: #209781;
 }
 
 /* Gameplay - cards */
 
-.board > .field {
+.board .field {
 	animation: fadein .3s;
 	display: inline-flex;
 	flex-direction: row;
@@ -113,7 +113,7 @@ article {
 
 }
 
-.field > .card {
+.field .card {
 	width: 110px;
 	height: 110px;
 	padding: 0;
@@ -125,11 +125,11 @@ article {
 	transition: all .3s ease-in-out;
 }
 
-.field > .card:hover {
+.field .card:hover {
 	filter: brightness(100%);
 }
 
-.board > .score {
+.board .score {
 	margin-top: 20px;
 	display: flex;
 	flex-direction: row;
@@ -137,7 +137,7 @@ article {
 	align-items: center;
 }
 
-.score > .time, .turns {
+.score .time, .turns {
 	margin: 0;
 	padding: 0;
 	font-size: 24px;
@@ -156,17 +156,17 @@ article {
 
 /* End of game - score */
 
-.board > .score-header {
+.board .score-header {
 	padding-bottom: 20px;
 	font-size: 50px;
 }
 
-.board > .score-new {
+.board .score-new {
 	color: #E9B64A;
 	font-size: 46px;
 }
 
-.board > .score-best {
+.board .score-best {
 	padding-top: 10px;
 	font-size: 32px;
 }
@@ -211,18 +211,18 @@ footer a:hover { color: #9c9b39; }
 
 /* special classes */
 
-.field > .hidden {
+.field .hidden {
 	cursor: default;
 	opacity: 0;
 }
 
-.field > .highlight {
+.field .highlight {
 	border-color: #e9b64a;
 	cursor: default;
 	filter:brightness(100%);
 }
 
-.field > .rotateCard {
+.field .rotateCard {
 	transform: scaleX(-1) rotateY(180deg);
 	transition: all .3s ease-in-out;
 }

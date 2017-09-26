@@ -1,10 +1,7 @@
 let pictures, lock, oneVisible, pairs, turns, imgData, cards, score, level, timer, secs, time;
 let g = new Game();
 
-// Draw main menu
 g.drawMenu();
-
-
 
 function Score() {
 
@@ -13,34 +10,32 @@ function Score() {
     this.hard = 0;
 
     this.getScore = function (level) {
-        if(level === "easy") {
-            return this.easy;
-        } else if( level === "medium") {
-            return this.medium;
-        } else {
-            return this.hard;
+        switch(level) {
+            case "easy":
+                return this.easy;
+            case "medium":
+                return this.medium;
+            case "hard":
+                return this.hard;
         }
     };
-
     this.setScore = function (level, score) {
-        if (level === "easy") {
-            this.easy = score;
-        } else if (level === "medium") {
-            this.medium = score;
-        } else {
-            this.hard = score;
+        switch(level) {
+            case "easy":
+                this.easy = score;
+                break;
+            case "medium":
+                this.medium = score;
+                break;
+            case "hard":
+                this.hard = score;
+                break;
         }
     };
     this.getCurrentScore = function (cards, turns, secs) {
         let result = cards * 30 - ((turns - (cards/2)) * 10) - secs;
-        if(result <= 0) {
-            return 0;
-        }
-        else {
-            return result;
-        }
+        return result <= 0 ? 0 : result;
     };
-
 }
 
 function Game() {
@@ -60,16 +55,17 @@ function Game() {
             $board.append("<div class=\"btn-level\">" + levels[i] + "</div>");
         }
         $(".btn-level").each(function (i) {
-            $(this).on("click", function () {
-                play(i);
-            });
+            $(this).on("click", () => play(i));
         });
     };
 
     function play(setLevel) {
 
         let $board = $(".board");
-        let aLength = 0;
+        $board.html("<div class=\"field\"></div>");
+
+        let $field = $(".field");
+
         pictures = [];
         lock = false;
         oneVisible = false;
@@ -77,53 +73,41 @@ function Game() {
         imgData = "";
         cards = [];
 
-        $board.html("<div class=\"field\"></div>");
-        let $field = $(".field");
-
         switch(setLevel) {
             // easy - 4x4 - 16 cards
             case 0:
                 level = "easy";
-                aLength = 8;
+                pairs = 8;
                 break;
             // normal - 6x5 - 30 cards
             case 1:
                 level = "medium";
-                aLength = 15;
+                pairs = 15;
                 break;
-            // difficult - 6x7 - 42 cards
+            // hard - 6x7 - 42 cards
             case 2:
                 level = "hard";
-                aLength = 21;
+                pairs = 21;
                 break;
         }
 
         $field.addClass(level);
 
-        for(let i = 1; aLength >= i; i++) {
+        // Prepare array of card images
+        for(let i = 1; pairs >= i; i++) {
             pictures.push(i + ".png");
         }
+        // Return random ordered and doubled array
+        const shuffleArray = array => _(array).concat(array).shuffle().value();
+        pictures = shuffleArray(pictures);
 
-        let upgrArr = function () {
-            return $.map(pictures, function (n) {
-                return [n, n];
-            }).sort(function () {
-                return 0.5 - Math.random();
-            });
-        };
-
-        let cImg = upgrArr();
-
-        pairs = cImg.length;
-
-        $(cImg).each(function (i) {
-            cards.push(new Card(cImg[i], "c" + i));
-        }).each(function (i) {
+        // Create objects Card and draw them on board
+        $(pictures).each((i) => cards.push(new Card(pictures[i], "c" + i))).each((i) => {
             $field.append("<div class=\"card\" id=\"" + cards[i].id + "\"></div>");
-            $("#" + cards[i].id).on("click", function () {
-                cards[i].revealCard();
-            });
+            $("#" + cards[i].id).on("click", () => cards[i].revealCard())
         });
+
+        // Draw on board timer and turn counter
         $board.append("<div class=\"score\">" +
             "<div class=\"time\">Time: 00:00:00</div>" +
             "<div class=\"turns\">Turn: 0</div>" +
@@ -141,20 +125,21 @@ function Card(img, id) {
     this.state = "normal";
 
     this.hide = function () {
-        let $id = $("#" + this.id);
-        let $board = $(".board");
 
         this.state = "hidden";
 
-        $id.toggleClass("hidden highlight");
-        pairs--;
+        let $id = $("#" + this.id);
+        let $board = $(".board");
 
-        // increase score
-        if(pairs === 0) {
+        $id.toggleClass("hidden highlight");
+        const hiddenCards = () => $.grep(cards, (e) => e.state === "hidden").length;
+
+        if(cards.length === hiddenCards()) {
+
             timer.stop();
 
             let points = score.getCurrentScore(cards.length, turns, secs);
-            // New best score
+
             if(score.getScore(level) < points) {
                 score.setScore(level, points);
                 $board.html("<div class=\"score-header\">Congratulations You won!</div>" +
@@ -182,10 +167,15 @@ function Card(img, id) {
         let $id = $("#" + this.id);
 
         if(!timer.isRunning()) {
+            // Start timer
             timer.start({precision: 'seconds'});
             timer.addEventListener('secondsUpdated', function () {
+
+                // Count seconds
                 secs = timer.getTimeValues().seconds + (timer.getTimeValues().minutes * 60) +
                     (timer.getTimeValues().hours * 3600) + (timer.getTimeValues().days * 3600 * 24);
+
+                // Display clock on board
                 time = timer.getTimeValues().toString();
                 $(".time").html("Time: " + time);
             });
@@ -197,29 +187,15 @@ function Card(img, id) {
             lock = true;
 
             $id.css({"background-image": this.img});
-            $id.addClass("rotateCard");
-            $id.toggleClass("highlight");
+            $id.toggleClass("highlight rotateCard");
 
             if(!oneVisible) {
-
-                imgData = this.img;
                 oneVisible = true;
+                imgData = this.img;
                 lock = false;
-
             } else {
-
-                if (this.img === imgData) {
-                    setTimeout(function() {
-                        changeCardState("hide")
-                    }, 750);
-                }
-                else {
-                    setTimeout(function () {
-                        changeCardState("restore")
-                    }, 1000);
-                }
-                turns++;
-                $(".turns").html("Turn: " + turns);
+                $(".turns").html("Turn: " + ++turns);
+                this.img === imgData ? setTimeout(() => changeCardState("hide"), 750) : setTimeout(() => changeCardState("restore"), 1000);
                 oneVisible = false;
             }
         }
