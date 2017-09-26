@@ -1,4 +1,13 @@
 let pictures, lock, oneVisible, pairs, turns, imgData, cards, score, level, timer, secs, time;
+
+$(document).ready(function () {
+    let preloadImages = [];
+    for(let i = 0; i < 21; i++) {
+       preloadImages.append(new Image());
+       preloadImages[i].src = i+".png";
+   }
+});
+
 let g = new Game();
 
 g.drawMenu();
