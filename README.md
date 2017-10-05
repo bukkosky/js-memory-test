@@ -6,23 +6,16 @@ Play Demo: [GitHub Page](https://rettles.github.io/js-memory-test/)
 #### Technologies
 - [jQuery](https://jquery.com/)
 - [easytimer.js](https://github.com/albert-gonzalez/easytimer.js)
+- [lodash](https://lodash.com/)
 
 ## Informations [PL]
-Projekt ten przedstawia moją wizję udoskonalenia gry zawartej w kursie. Cały projekt napisałem od nowa inspirując się odcinkiem z kursu kanału Pasja Informatyki (link powyżej). Niżej przedstawiam listę "większych", ważniejszych zmian, które wprowadziłem, wszystkiego nie opiszę np. detale kodu js ponieważ jest tego sporo a kod będzie refraktoryzowany, zachęcam do idywidualnego wglądu i analizy.
+Projekt ten przedstawia moją wizję udoskonalenia gry zawartej w kursie. Cały projekt napisałem od nowa inspirując się [odcinkiem z kursu kanału Pasja Informatyki](https://www.youtube.com/watch?v=edNqTubHUU0). Niżej przedstawiam listę "większych", ważniejszych zmian, które wprowadziłem.
+#### System punktowania
+Każda karta ma swoją wartość a wynosi ona 30pkt. Pierwsze odsłonięcie karty jest "darmowe", natomiast każdy późniejszy błąd obniża jej wartość o 5pkt. Wartość karty nie może spaść poniżej 0pkt.
+Wynik to suma punktów wszystkich kart obniżona o czas (sekundy) w jaki przeszliśmy grę.
 
-#### Nowy system punktowy
-Nowy system punktacji ma na celu lepsze oddanie umiejętności gracza ponieważ najlepszy gracz to najszybszy oraz najdokładniejszy, bierze on pod uwagę tak jak wspominałem czas, w którym zosała ukończona gra, ilość tur oraz ilość kart i przelicza to wszystko na punkty. Dzięki temu wyniki będą bardziej różnorodne.
-
-Zasada jest prosta: 
-- Za każdą odkrytą pare otrzymuje się 60pkt
-- Za każdą dodatkową turę** traci się 10pkt
-- Co sekundę traci się 1pkt
-
-Przykład - poziom trudności łatwy: 
-Mamy 16 kart czyli 8 par co daje nam 480 (60*8)pkt do zdobycia
-Ukończyliśmy grę w czasie 70 sekund i w 18 turach co daje nam: (480 - 100 - 70) 310pkt
-
-**Dodatkowe tury są naliczane gdy ilość tur przekroczy sumę wszystkich par
+**Dlaczego tak?**<br>
+W ten sposób mamy różnorodne wyniki no i najważniejsze - fart, w systemie gdzie były brane pod uwagę tylko tury może być nie fair ponieważ gracz może przez przypadek odkryć dwie takie same karty. Ten system stara się docenić umiejętność zapamiętywania dlatego też każdy ma w pierw szanse odsłonić kartę bez żadnych konsekwencji, a przypadkowe odkrycie pary nie daje znaczącej przewagi. Czas w grze zapobiega odkryciu pojedynczej karty i np. wpatrywania się w nią, innymi słowy kto szybciej zapamięta ten lepszy.
 
 #### Poziomy trudności
 Dostępne są 3 poziomy trudności:
@@ -30,7 +23,7 @@ Dostępne są 3 poziomy trudności:
 - Średni - 30 kart (rozmiar 6x5)
 - Trudny - 42 karty (rozmiar 6x7)
  
-#### Wyniki
-Gra przechowuje najlepsze wyniki, które uzyskamy w trakcie rozrywki co za tym idzie można ustanawiać rekordy. Dla każdego poziomu trudności ustanawia się najlepszy wynik. Reset następuje w wyniku odświeżenia strony.
+#### Ustanawianie rekordów
+Twój najlepszy wynik zostanie zapamiętany i będzie on przechowywany aż do przeładowania strony. Każdy poziom trudności przechowuje swój rekord.
 #### Tematyka Hotsa
 To jest wynik potrzeby na nowe karty, jako że nie mogłem znaleźć większej ilości podobnych grafik do tych z kursu to uznałem, że najprostszym wyjściem będzie zmiana tematyki na inną i padło na Hotsa :) Nie chciałem łączyć obu tematyk ponieważ trudniej by było stworzyć klimat na stronie.

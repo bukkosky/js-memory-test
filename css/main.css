@@ -76,12 +76,14 @@ article {
 
 /* Game - menu - choose level */
 .board .board-header {
+	animation: fadein .3s;
 	padding: 0;
 	font-size: 40px;
 	margin: 0 0 30px 0;
 }
 
 .board .btn-level {
+	animation: fadein .3s;
 	font-size: 24px;
 	border: 2px solid #7c7fc0;
 	background-color: #0b0a15;
@@ -157,21 +159,25 @@ article {
 /* End of game - score */
 
 .board .score-header {
+	animation: fadein .3s;
 	padding-bottom: 20px;
 	font-size: 50px;
 }
 
 .board .score-new {
+	animation: fadein .3s;
 	color: #E9B64A;
 	font-size: 46px;
 }
 
 .board .score-best {
+	animation: fadein .3s;
 	padding-top: 10px;
 	font-size: 32px;
 }
 
 .btn {
+	animation: fadein .3s;
 	color: #209781;
 	font-size: 50px;
 	transition: all .3s ease-in-out;
@@ -181,7 +187,6 @@ article {
 
 .btn:hover {
 	color: #E9B64A;
-
 }
 
 /* footer */

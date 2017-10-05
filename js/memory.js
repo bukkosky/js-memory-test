@@ -1,19 +1,8 @@
-let pictures, lock, oneVisible, pairs, turns, imgData, cards, score, level, timer, secs, time;
+$.fn.preload = function() { this.each(function() { $('<img/>')[0].src = this; })};
+let i = ["./img/1.png", "./img/2.png", "./img/3.png", "./img/4.png", "./img/5.png", "./img/6.png", "./img/7.png", "./img/8.png", "./img/9.png", "./img/10.png", "./img/11.png", "./img/12.png", "./img/13.png", "./img/14.png", "./img/15.png", "./img/16.png", "./img/17.png", "./img/18.png",    "./img/19.png", "./img/20.png","./img/21.png", "./img/card.png"];
+$(i).preload();
 
-let imagesToLoad = ["./img/1.png", "./img/2.png", "./img/3.png", "./img/4.png", "./img/5.png", "./img/6.png",
-    "./img/7.png", "./img/8.png", "./img/9.png", "./img/10.png", "./img/11.png", "./img/12.png",
-    "./img/13.png", "./img/14.png", "./img/15.png", "./img/16.png", "./img/17.png", "./img/18.png",
-    "./img/19.png", "./img/20.png","./img/21.png", "./img/card.png"];
-
-$.fn.preload = function() {
-
-    this.each(function(){
-        $('<img/>')[0].src = this;
-    });
-};
-
-$(imagesToLoad).preload();
-
+let pictures, lock, oneVisible, pairs, /*turns,*/ imgData, cards, score, level, timer, secs, time;
 
 let g = new Game();
 
@@ -48,8 +37,8 @@ function Score() {
                 break;
         }
     };
-    this.getCurrentScore = function (cards, turns, secs) {
-        let result = cards * 30 - ((turns - (cards/2)) * 10) - secs;
+    this.getCurrentScore = function (score, secs) {
+        let result = score - secs;
         return result <= 0 ? 0 : result;
     };
 }
@@ -85,7 +74,7 @@ function Game() {
         pictures = [];
         lock = false;
         oneVisible = false;
-        turns = 0;
+        /*turns = 0;*/
         imgData = "";
         cards = [];
 
@@ -109,52 +98,97 @@ function Game() {
 
         $field.addClass(level);
 
-        // Prepare array of card images
-        for(let i = 1; pairs >= i; i++) {
-            pictures.push(i + ".png");
-        }
+        for(let i = 1; pairs >= i; i++) pictures.push(i + ".png");
+
         // Return random ordered and doubled array
         const shuffleArray = array => _(array).concat(array).shuffle().value();
         pictures = shuffleArray(pictures);
 
-        // Create objects Card and draw them on board
-        $(pictures).each((i) => cards.push(new Card(pictures[i], "c" + i))).each((i) => {
-            $field.append("<div class=\"card\" id=\"" + cards[i].id + "\"></div>");
-            $("#" + cards[i].id).on("click", () => cards[i].revealCard())
+        $(pictures).each(() => $field.append("<div class=\"card\"></div>"));
+        $(".card").each(function (i) {
+           cards.push(new Card(pictures[i], this));
+           $(this).on("click", function () { cards[i].revealCard() });
         });
-
         // Draw on board timer and turn counter
         $board.append("<div class=\"score\">" +
             "<div class=\"time\">Time: 00:00:00</div>" +
-            "<div class=\"turns\">Turn: 0</div>" +
+            /*"<div class=\"turns\">Turn: 0</div>" +*/
             "</div>");
         $(".score").addClass(level);
     }
 }
 
-function Card(img, id) {
+function Card(img, query) {
 
     this.img = "url(img/" + img + ")";
-    this.id = id;
-
-    // States: revealed, hidden, normal
+    this.query = $(query);
     this.state = "normal";
+    this.points = 30;
+    this.firstReveal = false;
 
+    this.revealCard = function () {
+
+        if(!timer.isRunning()) {
+            // Start timer
+            timer.start({precision: "seconds"});
+            timer.addEventListener("secondsUpdated", function () {
+
+                // Count seconds
+                secs = timer.getTimeValues().seconds + (timer.getTimeValues().minutes * 60) +
+                    (timer.getTimeValues().hours * 3600) + (timer.getTimeValues().days * 3600 * 24);
+
+                // Display clock on board
+                time = timer.getTimeValues().toString();
+                $(".time").html("Time: " + time);
+            });
+        }
+        if(!lock && this.state === "normal") {
+
+            lock = true;
+            this.state = "revealed";
+
+            this.query.css({"background-image": this.img});
+            this.query.toggleClass("highlight rotateCard");
+
+            if(!oneVisible) {
+                oneVisible = true;
+                imgData = this.img;
+                lock = false;
+            } else {
+                /*$(".turns").html("Turn: " + ++turns);*/
+                this.img === imgData ? setTimeout(() => changeCardState("hide"), 750) : setTimeout(() => changeCardState("restore"), 1000);
+                oneVisible = false;
+            }
+        }
+    };
+    this.restore = function () {
+
+        if(!this.firstReveal) {
+            this.firstReveal = true;
+        } else {
+            if(this.points >= 0) this.points -= 5;
+        }
+
+        this.state = "normal";
+        this.query.toggleClass("highlight rotateCard");
+        this.query.css({"background-image":""});
+    };
     this.hide = function () {
-
-        this.state = "hidden";
-
-        let $id = $("#" + this.id);
+        const hiddenCards = () => $.grep(cards, (e) => e.state === "hidden").length;
         let $board = $(".board");
 
-        $id.toggleClass("hidden highlight");
-        const hiddenCards = () => $.grep(cards, (e) => e.state === "hidden").length;
+        this.state = "hidden";
+        this.query.toggleClass("hidden highlight");
 
         if(cards.length === hiddenCards()) {
 
             timer.stop();
-
-            let points = score.getCurrentScore(cards.length, turns, secs);
+            const countCardsPoints = function () {
+                let result = 0;
+                $(cards).each(function () { result += this.points });
+                return result;
+            };
+            const points = score.getCurrentScore(countCardsPoints(), secs);
 
             if(score.getScore(level) < points) {
                 score.setScore(level, points);
@@ -166,61 +200,14 @@ function Card(img, id) {
                     "<div class=\"score-best\">Best: " + score.getScore(level) + " points</div>");
             }
             $board.append("<a class=\"btn\">Play again</a>");
-            $(".btn").on("click", function () {
-                g.drawMenu();
-            });
+            $(".btn").on("click", () => g.drawMenu());
         }
     };
-    this.restore = function () {
-        let $id = $("#" + this.id);
-
-        this.state = "normal";
-
-        $id.toggleClass("highlight rotateCard");
-        $id.css({"background-image":""});
-    };
-    this.revealCard = function () {
-        let $id = $("#" + this.id);
-
-        if(!timer.isRunning()) {
-            // Start timer
-            timer.start({precision: 'seconds'});
-            timer.addEventListener('secondsUpdated', function () {
-
-                // Count seconds
-                secs = timer.getTimeValues().seconds + (timer.getTimeValues().minutes * 60) +
-                    (timer.getTimeValues().hours * 3600) + (timer.getTimeValues().days * 3600 * 24);
-
-                // Display clock on board
-                time = timer.getTimeValues().toString();
-                $(".time").html("Time: " + time);
-            });
-        }
-
-        if(!lock && this.state === "normal") {
-
-            this.state = "revealed";
-            lock = true;
-
-            $id.css({"background-image": this.img});
-            $id.toggleClass("highlight rotateCard");
-
-            if(!oneVisible) {
-                oneVisible = true;
-                imgData = this.img;
-                lock = false;
-            } else {
-                $(".turns").html("Turn: " + ++turns);
-                this.img === imgData ? setTimeout(() => changeCardState("hide"), 750) : setTimeout(() => changeCardState("restore"), 1000);
-                oneVisible = false;
-            }
-        }
-    };
-    function changeCardState(parameter) {
+    function changeCardState(state) {
         lock = false;
         $.grep(cards, function (e) {
             if (e.state === "revealed") {
-                switch(parameter) {
+                switch(state) {
                     case "hide":
                         e.hide();
                         break;
